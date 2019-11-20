@@ -24,14 +24,14 @@ end
 function ejuaes:body_filter(conf)
 
     local data = ngx.arg[1]
-    kong.log.err("data before aes ", data )
+    kong.log.err("data before aes... ", data )
 
     -- 加密
     local aes_128_cbc_with_iv = aes:new(conf.key, nil, aes.cipher(128,"cbc"), {iv=string.reverse(conf.key)})
     local encrypted = aes_128_cbc_with_iv:encrypt(data)
     local dataAfter = str.to_hex(encrypted)
 
-    kong.log.err("data before aes ", dataAfter )
+    kong.log.err("data after aes... ", dataAfter )
     ngx.arg[1]=dataAfter
 
 end
