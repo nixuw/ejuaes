@@ -1,4 +1,4 @@
-package = "kong-plugin-myplugin"
+package = "kong-plugin-ejuaes"
 version = "1.0-1"
 source = {
    url = "git://github.com/nixuw/ejuaes",
