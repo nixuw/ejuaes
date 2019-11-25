@@ -24,6 +24,9 @@ end
 function ejuaes:body_filter(conf)
 
     local data = ngx.arg[1]
+    if data == '' then
+        return
+    end
     kong.log.err("data before aes... ", data )
 
     -- 加密
