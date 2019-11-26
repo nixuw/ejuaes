@@ -11,30 +11,34 @@ local kong = kong
 
 
 local ejuaes={}
+ejuaes.PRIORITY=100
 ejuaes.VERSION="1.0"
+
 
 
 function ejuaes:header_filter(conf)
     -- 清空header中的content-length
     ngx.header.content_length=nil
 
-    -- 作为key曝露的接口
+end
+
+function ejuaes:access(conf)
     if conf.keyDiscover then
-        ngx.status = 200
+        -- 中断本阶段后续过滤链，但不中断对下一个执行阶段的调用
+        kong.response.exit(200,conf.key)
+        return
     end
 end
 
 function ejuaes:body_filter(conf)
 
-    local data = ngx.arg[1]
-    if data == '' then
+    -- 作为key曝露的接口; 打开此开关也可以达到不加密的效果
+    if conf.keyDiscover then
         return
     end
 
-    -- 作为key曝露的接口; 打开此开关也可以达到不加密的效果
-    if conf.keyDiscover then
-        ngx.arg[1] = conf.key
-        ngx.arg[2] = true
+    local data = ngx.arg[1]
+    if data == '' then
         return
     end
 
