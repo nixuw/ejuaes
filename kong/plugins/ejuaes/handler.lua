@@ -22,18 +22,13 @@ function ejuaes:header_filter(conf)
 
 end
 
-function ejuaes:access(conf)
-    if conf.keyDiscover then
-        -- 中断本阶段后续过滤链，但不中断对下一个执行阶段的调用
-        kong.response.exit(200,conf.key)
-        return
-    end
-end
+
+
 
 function ejuaes:body_filter(conf)
 
-    -- 作为key曝露的接口; 打开此开关也可以达到不加密的效果
-    if conf.keyDiscover then
+    -- 如果其它插件设置了这个标志，则表示无需再作任何处理
+    if ngx.ctx.eju_dont_do_anything then
         return
     end
 

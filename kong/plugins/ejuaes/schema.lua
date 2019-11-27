@@ -17,7 +17,6 @@ return {
             type = "record",
             fields = {
                 { key = { type = "string",required = true,}, },
-                { keyDiscover = { type = "boolean",required = true,default=false}, },
 
             }, }, },
     },
