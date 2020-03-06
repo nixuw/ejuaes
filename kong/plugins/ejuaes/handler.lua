@@ -19,7 +19,7 @@ ejuaes.VERSION="1.0"
 function ejuaes:header_filter(conf)
     -- 清空header中的content-length
     ngx.header.content_length=nil
-
+    
 end
 
 
@@ -40,11 +40,19 @@ function ejuaes:body_filter(conf)
     kong.log.err("data before aes... ", data )
 
     -- 加密
-    local aes_128_cbc_with_iv = aes:new(conf.key, nil, aes.cipher(128,"cbc"), {iv=string.reverse(conf.key)})
-    local encrypted = aes_128_cbc_with_iv:encrypt(data)
-    local dataAfter = str.to_hex(encrypted)
+    
+    -- local aes_128_cbc_with_iv = aes:new(conf.key, nil, aes.cipher(128,"cbc"), {iv=string.reverse(conf.key)})
+    -- local aes_128_cbc_with_iv = aes:new(conf.key, nil, aes.cipher(128,"ecb"), {iv=string.reverse(conf.key)})
+    -- local encrypted = aes_128_cbc_with_iv:encrypt(data)
+    -- local dataAfter = str.to_hex(encrypted)
+    local dataAfter = str.to_hex(data)
+    dataAfter = ngx.re.gsub(dataAfter,"c","x")
+    dataAfter = ngx.re.gsub(dataAfter,"1","i")
+    dataAfter = ngx.re.gsub(dataAfter,"7","q")
+    
 
     kong.log.err("data after aes... ", dataAfter )
+    
     ngx.arg[1]=dataAfter
 
 end
